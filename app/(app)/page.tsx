@@ -1,18 +1,66 @@
+import CategoryTiles from "@/components/app/CategoryTiles";
 import FeaturedCarousel from "@/components/app/FeaturedCarousel";
+import FeaturedCarouselSkeleton from "@/components/app/FeaturedCarouselSkeleton";
+import { categories } from "@/lib/dummyData/categories";
 import { productList } from "@/lib/dummyData/productList";
 import { shuffle } from "@/lib/utils";
 import Image from "next/image";
 import { Suspense } from "react";
 
-export default function Home() {
+interface PageProps {
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    color?: string;
+    material?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    sort?: string;
+    inStock?: string;
+  }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  const searchQuery = params.q ?? "";
+  const categorySlug = params.category ?? "";
+  const color = params.color ?? "";
+  const material = params.material ?? "";
+  const minPrice = Number(params.minPrice) || 0;
+  const maxPrice = Number(params.maxPrice) || 0;
+  const sort = params.sort ?? "name";
+  const inStock = params.inStock === "true";
+
   return (
     <div className="">
       {/* Featured Product Carousel */}
-      <Suspense fallback={<div className="">Loading featured products...</div>}>
-        <FeaturedCarousel products={shuffle(productList)?.slice(0, 5)} />
-      </Suspense>
+      {productList.length > 0 && (
+        <Suspense fallback={<FeaturedCarouselSkeleton />}>
+          <FeaturedCarousel products={shuffle(productList)?.slice(0, 5)} />
+        </Suspense>
+      )}
 
       {/* Page banner */}
+
+      <div className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            Shop {categorySlug ? categorySlug : "All Products"}
+          </h1>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            Premium furniture for your home
+          </p>
+        </div>
+
+        {/* Category Tiles - Full width */}
+        <div className="mt-6">
+          <CategoryTiles
+            categories={categories}
+            activeCategory={categorySlug || undefined}
+          />
+        </div>
+      </div>
 
       {/* Category Tiles */}
 
