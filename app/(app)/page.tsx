@@ -1,6 +1,7 @@
 import CategoryTiles from "@/components/app/CategoryTiles";
 import FeaturedCarousel from "@/components/app/FeaturedCarousel";
 import FeaturedCarouselSkeleton from "@/components/app/FeaturedCarouselSkeleton";
+import ProductSection from "@/components/app/ProductSection";
 import { categories } from "@/lib/dummyData/categories";
 import { productList } from "@/lib/dummyData/productList";
 import { shuffle } from "@/lib/utils";
@@ -62,7 +63,13 @@ export default async function Home({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* Category Tiles */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <ProductSection
+          categories={categories}
+          products={productList}
+          searchQuery={searchQuery}
+        />
+      </div>
 
       {/* Product section */}
     </div>

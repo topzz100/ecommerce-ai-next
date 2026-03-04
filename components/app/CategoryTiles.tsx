@@ -50,7 +50,7 @@ const CategoryTiles = ({ categories, activeCategory }: CategoryTilesProps) => {
 
           return (
             <Link
-              key={category._id}
+              key={category.id}
               href={`/?category=${category.slug}`}
               className={`group relative flex-shrink-0 overflow-hidden rounded-xl transition-all duration-300 ${
                 isActive
