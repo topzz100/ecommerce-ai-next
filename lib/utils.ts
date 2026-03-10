@@ -25,3 +25,44 @@ export function formatPrice(
     maximumFractionDigits: 2,
   })}`;
 }
+
+type DateFormatOption = "short" | "long" | "datetime";
+
+const DATE_FORMAT_OPTIONS: Record<
+  DateFormatOption,
+  Intl.DateTimeFormatOptions
+> = {
+  short: { day: "numeric", month: "short" },
+  long: { day: "numeric", month: "long", year: "numeric" },
+  datetime: {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  },
+};
+
+export function formatDate(
+  date: string | null | undefined,
+  format: DateFormatOption = "long",
+  fallback = "Date unknown",
+): string {
+  if (!date) return fallback;
+  return new Date(date).toLocaleDateString(
+    "en-GB",
+    DATE_FORMAT_OPTIONS[format],
+  );
+}
+
+/**
+ * Format an order number for display (shows only the last segment after the last hyphen)
+ * @param orderNumber - Full order number (e.g., "ORD-2024-ABC123")
+ * @returns Shortened order number (e.g., "ABC123") or "N/A" if null
+ */
+export function formatOrderNumber(
+  orderNumber: string | null | undefined,
+): string {
+  if (!orderNumber) return "N/A";
+  return orderNumber.split("-").pop() ?? orderNumber;
+}
