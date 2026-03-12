@@ -172,8 +172,8 @@ const ProductFilters = ({ categories }: ProductFiltersProps) => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((cat) => (
-              <SelectItem key={cat._id} value={cat.slug ?? ""}>
+            {categories.map((cat: any) => (
+              <SelectItem key={cat.id} value={cat.slug ?? ""}>
                 {cat.title}
               </SelectItem>
             ))}

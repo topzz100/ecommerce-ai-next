@@ -123,7 +123,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
       <CardFooter className="mt-auto p-5 pt-0">
         <AddToCartButton
-          productId={product._id}
+          productId={product.id}
           name={product.name ?? "Unknown Product"}
           price={product.price ?? 0}
           image={mainImageUrl ?? undefined}

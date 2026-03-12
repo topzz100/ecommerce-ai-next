@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 //import { useCartActions, useCartItem } from "@/lib/store/cart-store-provider";
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/lib/store/cart.store";
 
 interface AddToCartButtonProps {
   productId: string;
@@ -27,20 +28,38 @@ export function AddToCartButton({
   // const cartItem = useCartItem(productId);
 
   //const quantityInCart = cartItem?.quantity ?? 0;
-  const quantityInCart: any = 2;
+  const addToCart = useCartStore((state) => state.addToCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const cartItem = useCartStore((state: any) => state.cartItem);
+  const items = useCartStore((state: any) => state.items);
+
+  console.log(items, "itemsqqq>>>>>>>>>");
+  // const quantityInCart: any = () =>
+  //   useCartStore(
+  //     (state) =>
+  //       state.items.find((item) => item.productId === productId)?.quantity ?? 0,
+  //   );
+  //const quantityInCart = cartItem(productId)?.quantity ?? 0;
+  const quantityInCart = useCartStore(
+    (state) =>
+      state.items.find((item) => item.productId === productId)?.quantity ?? 0,
+  );
   const isOutOfStock = stock <= 0;
   const isAtMax = quantityInCart >= stock;
 
   const handleAdd = () => {
-    if (quantityInCart < stock) {
-      // addItem({ productId, name, price, image }, 1);
-      toast.success(`Added ${name}`);
-    }
+    // if (quantityInCart < stock) {
+    //   console.log("testqqqqq 111");
+    //   toast.success(`Added ${name}`);
+    // }
+    addToCart({ productId, name, price, image }, 1);
+    toast.success(`Added ${name}`);
+    console.log("testqqqqq 111");
   };
 
   const handleDecrement = () => {
     if (quantityInCart > 0) {
-      // updateQuantity(productId, quantityInCart - 1);
+      updateQuantity(productId, quantityInCart - 1);
     }
   };
 
@@ -67,6 +86,8 @@ export function AddToCartButton({
     );
   }
 
+  console.log(quantityInCart, "--------------", quantityInCart, "qqqqqqqq");
+
   // In cart - show quantity controls
   return (
     <div
@@ -90,7 +111,7 @@ export function AddToCartButton({
         variant="ghost"
         size="icon"
         className="h-full flex-1 rounded-l-none disabled:opacity-20"
-        onClick={handleAdd}
+        onClick={() => handleAdd()}
         disabled={isAtMax}
       >
         <Plus className="h-4 w-4" />
