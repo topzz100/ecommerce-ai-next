@@ -22,8 +22,9 @@ import { useCartStore } from "@/lib/store/cart.store";
 // import { CartSummary } from "./CartSummary";
 
 export function CartSheet() {
-  const items = productList;
+  // const items = productList;
   //   const isOpen = useCartIsOpen();
+  const items = useCartStore((state: any) => state.items);
   const totalItems = useCartStore((state) => state.totalItems());
   //   const { closeCart } = useCartActions();
   // const { stockMap, isLoading, hasStockIssues } = useCartStock(items);
@@ -31,6 +32,20 @@ export function CartSheet() {
   const isLoading = false;
   const isOpen = useCartStore((state) => state.isOpen);
   const { closeCart } = useCartStore((state) => state);
+
+  const stockInfo = (id: any) => {
+    const product = productList.find((product) => product.id === id);
+    const item = items.find((product: any) => product.id === id);
+    const currentStock = product?.stock ?? 0;
+    const stockData = {
+      productId: id,
+      currentStock,
+      isOutOfStock: currentStock === 0,
+      exceedsStock: item?.quantity > currentStock,
+      availableQuantity: Math.min(item?.quantity, currentStock),
+    };
+    return stockData;
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
@@ -70,8 +85,12 @@ export function CartSheet() {
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto px-5">
               <div className="space-y-2 py-2 divide-y divide-zinc-200 dark:divide-zinc-800">
-                {items.map((item) => (
-                  <CartItem key={item.id} item={item} stockInfo={item} />
+                {items.map((item: any) => (
+                  <CartItem
+                    key={item.productId}
+                    item={item}
+                    stockInfo={stockInfo(item.productId)}
+                  />
                 ))}
               </div>
             </div>

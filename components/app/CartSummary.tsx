@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
+import { useCartStore } from "@/lib/store/cart.store";
 // import {
 //   useTotalPrice,
 //   useTotalItems,
@@ -15,9 +16,11 @@ interface CartSummaryProps {
 
 export function CartSummary({ hasStockIssues = false }: CartSummaryProps) {
   // const totalPrice = useTotalPrice();
-  const totalPrice = 50000;
+  //const totalPrice = 50000;
   // const totalItems = useTotalItems();
-  const totalItems: any = 5;
+  const totalItems = useCartStore((state) => state.totalItems());
+  const totalPrice = useCartStore((state) => state.totalPrice());
+  const { closeCart } = useCartStore((state) => state);
   // const { closeCart } = useCartActions();
 
   if (totalItems === 0) return null;
@@ -38,7 +41,7 @@ export function CartSummary({ hasStockIssues = false }: CartSummaryProps) {
           </Button>
         ) : (
           <Button asChild className="w-full">
-            <Link href="/checkout" onClick={() => {}}>
+            <Link href="/checkout" onClick={() => closeCart()}>
               Checkout
             </Link>
           </Button>
@@ -47,6 +50,7 @@ export function CartSummary({ hasStockIssues = false }: CartSummaryProps) {
       <div className="mt-3 text-center">
         <Link
           href="/"
+          onClick={() => closeCart()}
           className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           Continue Shopping →

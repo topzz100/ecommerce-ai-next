@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AddToCartButton } from "@/components/app/AddToCartButton";
 import { StockBadge } from "@/components/app/StockBadge";
 import { cn, formatPrice } from "@/lib/utils";
+import { useCartStore } from "@/lib/store/cart.store";
 
 interface CartItemProps {
   item: any;
@@ -14,7 +15,7 @@ interface CartItemProps {
 }
 
 export function CartItem({ item, stockInfo }: CartItemProps) {
-  //const { removeItem } = useCartActions();
+  const { removeFromCart } = useCartStore((state) => state);
 
   const isOutOfStock = stockInfo?.isOutOfStock ?? false;
   const exceedsStock = stockInfo?.exceedsStock ?? false;
@@ -35,9 +36,9 @@ export function CartItem({ item, stockInfo }: CartItemProps) {
           isOutOfStock && "opacity-50",
         )}
       >
-        {item.images ? (
+        {item.image ? (
           <Image
-            src={item.images[0]}
+            src={item.image}
             alt={item.name}
             fill
             className="object-cover"
@@ -66,7 +67,7 @@ export function CartItem({ item, stockInfo }: CartItemProps) {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-zinc-400 hover:text-red-500"
-            onClick={() => {}}
+            onClick={() => removeFromCart(item.productId)}
           >
             <Trash2 className="h-4 w-4" />
             <span className="sr-only">Remove {item.name}</span>
@@ -79,15 +80,15 @@ export function CartItem({ item, stockInfo }: CartItemProps) {
 
         {/* Stock Badge & Quantity Controls */}
         <div className="mt-2 flex flex-row justify-between items-center gap-2">
-          <StockBadge productId={item.id} stock={3} />
+          <StockBadge productId={item.productId} stock={currentStock} />
           {!isOutOfStock && (
             <div className="w-32 flex self-end ml-auto">
               <AddToCartButton
-                productId={item.id}
+                productId={item.productId}
                 name={item.name}
                 price={item.price}
                 image={item.image}
-                stock={3}
+                stock={currentStock}
               />
             </div>
           )}
